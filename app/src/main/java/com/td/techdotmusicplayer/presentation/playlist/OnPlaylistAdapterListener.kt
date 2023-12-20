@@ -7,8 +7,6 @@ import com.td.techdotmusicplayer.data.model.Song
  *
  * @author TechDharamveer
  * **/
-
-
 interface OnPlaylistAdapterListener {
     fun playSong(song: Song,songs:ArrayList<Song>)
     fun removeSongItem(song: Song)

@@ -1,4 +1,4 @@
-package com.td.techdotmusicplayer
+package com.android.player
 
 import android.content.ComponentName
 import android.content.Context
@@ -9,8 +9,8 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import androidx.appcompat.app.AppCompatActivity
+import com.android.player.SongPlayerViewModel.Companion.getPlayerViewModelInstance
 import com.google.android.exoplayer2.MediaItem
-import com.td.techdotmusicplayer.SongPlayerViewModel.Companion.getPlayerViewModelInstance
 import com.td.techdotmusicplayer.service.OnPlayerServiceCallback
 import com.td.techdotmusicplayer.service.SongPlayerService
 import com.td.techdotmusicplayer.util.orFalse
@@ -24,10 +24,10 @@ open class BaseSongPlayerActivity : AppCompatActivity(), OnPlayerServiceCallback
     private var msg = 0
     val songPlayerViewModel: SongPlayerViewModel = getPlayerViewModelInstance()
 
-    private val mHandler = object : Handler(Looper.getMainLooper()){
+    private val mHandler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
-            when(msg.what){
-                ACTION_PLAY_SONG_IN_LIST -> mService?.play(mMediaItems,mMediaItem)
+            when (msg.what) {
+                ACTION_PLAY_SONG_IN_LIST -> mService?.play(mMediaItems, mMediaItem)
                 ACTION_PAUSE -> mService?.pause()
                 ACTION_STOP -> {
                     mService?.stop()
@@ -41,7 +41,7 @@ open class BaseSongPlayerActivity : AppCompatActivity(), OnPlayerServiceCallback
      * Defines callbacks for service binding, passed to bindService()
      */
     private val mConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName?, service: IBinder?) {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
             // We've bound to SongPlayerService, cast the IBinder and get SongPlayerService instance
             val binder = service as SongPlayerService.LocalBinder
             mService = binder.service
@@ -51,21 +51,21 @@ open class BaseSongPlayerActivity : AppCompatActivity(), OnPlayerServiceCallback
             mService?.addListener(this@BaseSongPlayerActivity)
         }
 
-        override fun onServiceDisconnected(p0: ComponentName?) {
+        override fun onServiceDisconnected(classname: ComponentName) {
             mBound = false
             mService?.removeListener()
             mService = null
         }
     }
 
-    private fun bindPlayerService(){
+    private fun bindPlayerService() {
         if (!mBound) bindService(
             Intent(this, SongPlayerService::class.java),
             mConnection, Context.BIND_AUTO_CREATE
         )
     }
 
-    fun play(mediaItems: ArrayList<MediaItem>, song: MediaItem?){
+    fun play(mediaItems: ArrayList<MediaItem>, song: MediaItem?) {
         msg = ACTION_PLAY_SONG_IN_LIST
         mMediaItem = song
         mMediaItems = mediaItems
@@ -73,13 +73,13 @@ open class BaseSongPlayerActivity : AppCompatActivity(), OnPlayerServiceCallback
         else mHandler.sendEmptyMessage(msg)
     }
 
-    fun pause(){
+    fun pause() {
         msg = ACTION_PAUSE
         if (mService == null) bindPlayerService()
         else mHandler.sendEmptyMessage(msg)
     }
 
-    fun stop(){
+    fun stop() {
         msg = ACTION_STOP
         if (mService == null) bindPlayerService()
         else mHandler.sendEmptyMessage(msg)
@@ -89,26 +89,26 @@ open class BaseSongPlayerActivity : AppCompatActivity(), OnPlayerServiceCallback
         mService?.skipToNext()
     }
 
-    fun previous(){
+    fun previous() {
         mService?.skipToPrevious()
     }
 
-    fun toggle(){
+    fun toggle() {
         mService?.toggle()
     }
 
-    fun seekTo(position: Long) {
-        position.let { nonNullPosition ->
+    fun seekTo(position: Long?) {
+        position?.let { nonNullPosition ->
             mService?.seekTo(nonNullPosition)
         }
     }
 
-    fun shuffle(){
+    fun shuffle() {
         mService?.onShuffle(songPlayerViewModel.isShuffleData.value.orFalse())
         songPlayerViewModel.shuffle()
     }
 
-    fun repeat(){
+    fun repeat() {
         mService?.onRepeat(songPlayerViewModel.isRepeatData.value.orFalse())
         songPlayerViewModel.repeat()
     }
@@ -122,14 +122,14 @@ open class BaseSongPlayerActivity : AppCompatActivity(), OnPlayerServiceCallback
     }
 
     override fun updateSongProgress(duration: Long, position: Long) {
-        songPlayerViewModel.setChangePosition(position,duration)
+        songPlayerViewModel.setChangePosition(position, duration)
     }
 
     override fun updateUiForPlayingMediaItem(mediaItem: MediaItem?) {
         songPlayerViewModel.updateMediaItem(mediaItem)
     }
 
-    private fun unbindService(){
+    private fun unbindService() {
         if (mBound) {
             unbindService(mConnection)
             mBound = false

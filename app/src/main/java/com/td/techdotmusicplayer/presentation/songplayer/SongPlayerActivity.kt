@@ -7,10 +7,13 @@ import android.widget.SeekBar
 import androidx.lifecycle.Observer
 import coil.load
 import coil.request.CachePolicy
+import com.android.player.BaseSongPlayerActivity
 import com.google.android.exoplayer2.MediaItem
 import com.google.gson.Gson
-import com.td.techdotmusicplayer.BaseSongPlayerActivity
+import com.td.techdotmusicplayer.R
 import com.td.techdotmusicplayer.data.model.Song
+import com.td.techdotmusicplayer.data.model.Song.Companion.createMediaItem
+import com.td.techdotmusicplayer.util.OnSwipeTouchListener
 import kotlinx.android.synthetic.main.activity_song_player.*
 import java.io.File
 

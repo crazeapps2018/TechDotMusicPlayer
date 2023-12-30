@@ -11,7 +11,7 @@ class PlaylistViewModel(
     private val saveSongDataUseCase: SaveSongDataUseCase,
     private val getSongsUseCase: GetSongsUseCase,
     private val deleteSongUseCase: DeleteSongUseCase
-): ViewModel() {
+) : ViewModel() {
 
     val playlistData = MutableLiveData<List<Song>>()
 
@@ -19,15 +19,14 @@ class PlaylistViewModel(
         saveSongDataUseCase.saveSongItem(song)
     }
 
-    fun getSongsFromDb(){
+    fun getSongsFromDb() {
         playlistData.value = getSongsUseCase.getSongs()
     }
 
-    fun removeItemFromList(song: Song){
+    fun removeItemFromList(song: Song) {
         deleteSongUseCase.deleteSongItem(song)
         val list = playlistData.value as ArrayList<Song>
         list.remove(song)
         playlistData.value = list
     }
-
 }

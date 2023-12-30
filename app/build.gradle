@@ -3,16 +3,17 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
+
 }
 
 android {
     namespace 'com.td.techdotmusicplayer'
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.td.techdotmusicplayer"
         minSdk 21
-        targetSdk 32
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -42,6 +43,14 @@ android {
     lintOptions {
         abortOnError false
     }
+    kapt {
+        correctErrorTypes true
+    }
+
+    buildFeatures
+            {
+                viewBinding = true
+            }
 }
 
 ext.kotlin_version = '1.5.20'
@@ -75,6 +84,7 @@ dependencies {
 
     //Arch libs
     implementation "android.arch.lifecycle:extensions:$arch_version"
+    kapt "android.arch.lifecycle:compiler:1.1.0"
 
     //Room libs
     implementation "androidx.room:room-runtime:$room_version"
@@ -87,6 +97,7 @@ dependencies {
     implementation "io.insert-koin:koin-android-compat:$koin_version"
     implementation "io.insert-koin:koin-core:$koin_version"
     testImplementation "io.insert-koin:koin-test:$koin_version"
+    //implementation "io.insert-koin:koin-androidx-viewmodel:$koin_version"
 
     //Image loader
     implementation 'io.coil-kt:coil:1.0.0'
@@ -109,8 +120,5 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.25.0'
     testImplementation 'org.mockito:mockito-inline:2.21.0'
 
-    // debugImplementation because LeakCanary should only run in debug builds.
-    debugImplementation('com.squareup.leakcanary:leakcanary-android:2.5'){
-        because("debugImplementation because LeakCanary should only run in debug builds.")
-    }
+
 }

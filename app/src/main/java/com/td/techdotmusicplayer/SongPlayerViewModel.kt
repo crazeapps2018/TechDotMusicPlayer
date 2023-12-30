@@ -1,11 +1,10 @@
-package com.td.techdotmusicplayer
+package com.android.player
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.exoplayer2.MediaItem
 import com.td.techdotmusicplayer.util.formatTimeInMillisToString
-import java.time.Duration
 
 class SongPlayerViewModel : ViewModel() {
 
@@ -14,7 +13,7 @@ class SongPlayerViewModel : ViewModel() {
     private val _isPlayingData = MutableLiveData<Boolean>()
     val isPlayingData: LiveData<Boolean> = _isPlayingData
     private val _songDurationTextData = MutableLiveData<String>()
-    val songDurationTextData = _songDurationTextData
+    val songDurationTextData: LiveData<String> = _songDurationTextData
     private val _songDurationData = MutableLiveData<Int>()
     val songDurationData: LiveData<Int> = _songDurationData
     private val _songPositionTextData = MutableLiveData<String>()
@@ -32,32 +31,32 @@ class SongPlayerViewModel : ViewModel() {
         _mediaItemData.value = mediaItem
     }
 
-    fun shuffle(){
+    fun shuffle() {
         _isShuffleData.value = _isShuffleData.value != true
     }
 
-    fun repeatAll(){
-        _isRepeatAllData.value = isRepeatAllData.value != true
+    fun repeatAll() {
+        _isRepeatAllData.value = _isRepeatAllData.value != true
     }
 
-    fun repeat(){
+    fun repeat() {
         _isRepeatData.value = _isRepeatData.value != true
     }
 
-    fun setPlayingStatus(playStatus: Boolean){
+    fun setPlayingStatus(playStatus : Boolean){
         _isPlayingData.value = playStatus
     }
 
-    fun stop(){
+    fun stop() {
         _songPositionData.value = 0
         _songPositionTextData.value = formatTimeInMillisToString(_songPositionData.value?.toLong() ?: 0)
     }
 
-    fun setChangePosition(currentPosition: Long,duration: Long){
-        _songPositionTextData.value  = formatTimeInMillisToString(currentPosition)
+    fun setChangePosition(currentPosition: Long, duration: Long) {
+        _songPositionTextData.value = formatTimeInMillisToString(currentPosition)
         _songPositionData.value = currentPosition
 
-        if(_songDurationTextData.value != formatTimeInMillisToString(duration)){
+        if(_songDurationTextData.value != formatTimeInMillisToString(duration)) {
             _songDurationTextData.value = formatTimeInMillisToString(duration)
             _songDurationData.value = duration.toInt()
         }
@@ -68,13 +67,10 @@ class SongPlayerViewModel : ViewModel() {
 
         @Synchronized
         fun getPlayerViewModelInstance(): SongPlayerViewModel {
-            if (mInstance == null){
+            if (mInstance == null) {
                 mInstance = SongPlayerViewModel()
             }
             return mInstance as SongPlayerViewModel
         }
     }
-
-
-
 }

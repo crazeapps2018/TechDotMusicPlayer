@@ -1,22 +1,21 @@
 package com.td.techdotmusicplayer.presentation.playlist
 
 import android.Manifest
-import android.app.AlertDialog
-import android.app.Notification.Action
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.provider.MediaStore
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import com.android.player.BaseSongPlayerActivity
 import com.google.android.material.snackbar.Snackbar
-import com.td.techdotmusicplayer.BaseSongPlayerActivity
 import com.td.techdotmusicplayer.R
 import com.td.techdotmusicplayer.data.model.Song
 import com.td.techdotmusicplayer.presentation.songplayer.SongPlayerActivity
+import com.td.techdotmusicplayer.util.ManagePermissions
 import kotlinx.android.synthetic.main.activity_playlist.*
 import kotlinx.android.synthetic.main.content_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,22 +25,46 @@ class PlaylistActivity : BaseSongPlayerActivity(), OnPlaylistAdapterListener {
     private var adapter: PlaylistAdapter? = null
     private val viewModel: PlaylistViewModel by viewModel()
 
+    private val PermissionsRequestCode = 123
+    private lateinit var managePermissions: ManagePermissions
+
+
+    // Initialize a list of required permissions to request runtime
+    val list = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        listOf(
+            Manifest.permission.READ_MEDIA_VIDEO,
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+
+        )
+    } else {
+        listOf(
+
+            Manifest.permission.READ_EXTERNAL_STORAGE
+
+        )
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_playlist)
         setSupportActionBar(toolbar)
 
+
+        // Initialize a new instance of ManagePermissions class
+        managePermissions = ManagePermissions(this, list, PermissionsRequestCode)
+
         adapter = PlaylistAdapter(this)
         playlist_recycler_view.adapter = adapter
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            managePermissions.checkPermissions()
+
+
 
         fab.setOnClickListener { view ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (isReadPhoneStatePermissionGranted()) openMusicList()
-                else requestPermissions(
-                    arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQUEST_PERMISSION_READ_EXTERNAL_STORAGE_CODE
-                )
-            } else openMusicList()
+            openMusicList()
         }
 
         viewModel.playlistData.observe(this, {
@@ -110,22 +133,14 @@ class PlaylistActivity : BaseSongPlayerActivity(), OnPlaylistAdapterListener {
             )
             viewModel.saveSongData(song)
         }
-        cursor?.close();
-
+        cursor?.close()
     }
 
-    private fun isReadPhoneStatePermissionGranted(): Boolean {
-        val firstPermissionResult = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-        return firstPermissionResult == PackageManager.PERMISSION_GRANTED
-    }
 
     private fun showRemoveSongItemConfirmDialog(song: Song) {
         // setup the alert builder
         AlertDialog.Builder(this)
-            .setMessage("Are you sure to remove the song?")
+            .setMessage("Are you sure to remove this song?")
             // add a button
             .apply {
                 setPositiveButton(R.string.yes) { _, _ ->
@@ -156,10 +171,10 @@ class PlaylistActivity : BaseSongPlayerActivity(), OnPlaylistAdapterListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             REQUEST_PERMISSION_READ_EXTERNAL_STORAGE_CODE -> if (grantResults.isNotEmpty()) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {// Permission granted
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {// Permission Granted
                     openMusicList()
                 } else {
-                    // permission denied
+                    // Permission Denied
                     Snackbar.make(
                         playlist_recycler_view,
                         getString(R.string.you_denied_permission),
@@ -176,16 +191,11 @@ class PlaylistActivity : BaseSongPlayerActivity(), OnPlaylistAdapterListener {
     }
 
     override fun playSong(song: Song, songs: ArrayList<Song>) {
-
-        SongPlayerActivity.start(this,song,songs)
+        SongPlayerActivity.start(this, song, songs)
     }
-
 
     companion object {
         const val REQUEST_PERMISSION_READ_EXTERNAL_STORAGE_CODE = 7031
         const val PICK_AUDIO_KEY = 2017
-
     }
-
 }
-

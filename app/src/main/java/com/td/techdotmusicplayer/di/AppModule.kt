@@ -1,6 +1,6 @@
 package com.td.techdotmusicplayer.di
 
-import com.td.techdotmusicplayer.di.module.createPlaylistRepository
+import com.android.musicplayer.di.module.createPlaylistRepository
 import com.td.techdotmusicplayer.domain.respository.PlaylistRepository
 import com.td.techdotmusicplayer.domain.usecase.DeleteSongUseCase
 import com.td.techdotmusicplayer.domain.usecase.GetSongsUseCase
@@ -10,7 +10,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val AppModule = module {
-    viewModel{
+    viewModel {
         PlaylistViewModel(
             saveSongDataUseCase = get(),
             getSongsUseCase = get(),

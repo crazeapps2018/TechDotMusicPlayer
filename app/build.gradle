@@ -79,6 +79,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
 
+    // For Java
+    implementation 'androidx.work:work-runtime:2.7.1'
+
+    // For Kotlin
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'com.android.support:multidex:1.0.3'
 

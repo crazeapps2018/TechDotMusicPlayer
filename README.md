@@ -11,9 +11,9 @@ This repository contains a detailed sample app that implements Music Player usin
 
 # About The Author
 You can connect with me here:
-* [Tech Dharamveer](https://www.techdharamveer.com/)
+* [Tech Dharamveer](https://www.techdharamveer.com)
 * [Twitter](https://twitter.com/techdharamveer)
-* [LinkedIn](www.linkedin.com/in/techdharamveer)
+* [LinkedIn](https://www.linkedin.com/in/techdharamveer)
 
 #### The app has following packages:
 1. **data**: It contains all the data accessing and manipulating components.

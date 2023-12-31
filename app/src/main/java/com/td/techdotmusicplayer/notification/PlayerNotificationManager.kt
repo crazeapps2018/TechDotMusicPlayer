@@ -45,27 +45,28 @@ constructor(private val mService: SongPlayerService) : BroadcastReceiver() {
 
         mPauseIntent = PendingIntent.getBroadcast(
             mService, NOTIFICATION_REQUEST_CODE,
-            Intent(ACTION_PAUSE).setPackage(getPackageName()), PendingIntent.FLAG_CANCEL_CURRENT
+            Intent(ACTION_PAUSE).setPackage(getPackageName()),
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         mPlayIntent = PendingIntent.getBroadcast(
             mService, NOTIFICATION_REQUEST_CODE,
-            Intent(ACTION_PLAY).setPackage(getPackageName()), PendingIntent.FLAG_CANCEL_CURRENT
+            Intent(ACTION_PLAY).setPackage(getPackageName()), PendingIntent.FLAG_IMMUTABLE
         )
 
         mPreviousIntent = PendingIntent.getBroadcast(
             mService, NOTIFICATION_REQUEST_CODE,
-            Intent(ACTION_PREV).setPackage(getPackageName()), PendingIntent.FLAG_CANCEL_CURRENT
+            Intent(ACTION_PREV).setPackage(getPackageName()), PendingIntent.FLAG_IMMUTABLE
         )
 
         mNextIntent = PendingIntent.getBroadcast(
             mService, NOTIFICATION_REQUEST_CODE,
-            Intent(ACTION_NEXT).setPackage(getPackageName()), PendingIntent.FLAG_CANCEL_CURRENT
+            Intent(ACTION_NEXT).setPackage(getPackageName()), PendingIntent.FLAG_IMMUTABLE
         )
 
         mStopIntent = PendingIntent.getBroadcast(
             mService, NOTIFICATION_REQUEST_CODE,
-            Intent(ACTION_STOP).setPackage(getPackageName()), PendingIntent.FLAG_CANCEL_CURRENT
+            Intent(ACTION_STOP).setPackage(getPackageName()), PendingIntent.FLAG_IMMUTABLE
         )
 
         // Cancel all notifications to handle the case where the Service was killed and restarted by the system.
